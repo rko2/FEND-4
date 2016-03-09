@@ -487,19 +487,20 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // Moves the sliding background pizzas based on scroll position
 var items = document.getElementsByClassName('mover');
 
+  //Added phasearray so i%5 wouldn't need to be calculated over and over again.
 function updatePositions() {
   frame++;
   var scrollTop = document.body.scrollTop;
   var phasearray = [];
   window.performance.mark("mark_start_frame");
 
-  // Added array for values of i%5 from original code so that i%5 wouldn't need to be recalculated over and over again.
   for (var i = 0; i < 5; i++) {
     phasearray.push(Math.sin((scrollTop/1250) + i));
   }
   for (var i = 0; i < items.length; i++) {
     var phase = phasearray[i%5];
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px'
+    //items[i].style.left = items[i].basicLeft + 100 * phase + 'px'
+    items[i].style.transform = 'translateX(' + (100 * phase) + 'px)';
     }
 
   /* var items = document.querySelectorAll('.mover');
@@ -523,16 +524,18 @@ function updatePositions() {
 window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding pizzas when the page loads.
+// Lowered pizza number to 25.
+// Replaced basicLeft with style.left, since basicLeft is now meaningless.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  for (var i = 0; i < 25; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
+    elem.style.left = (i % cols) * s + 'px';
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
